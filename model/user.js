@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({
     },
     type : {
         type : String,
-        default : "customer"
+        default : "student" 
     },
     profilePicture : {
         type : String,
