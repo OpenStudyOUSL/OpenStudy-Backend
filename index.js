@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import userRouter from './routes/userRouter.js';
+import courseRouter from './routes/courseRouter.js';
+import quizRouter from './routes/quizRouter.js';
 
 dotenv.config()
 
@@ -42,6 +44,8 @@ app.use(
 )
 
 app.use("/api/users", userRouter)
+app.use("/api/courses", courseRouter)
+app.use("/api/quizzes", quizRouter)
 
 app.listen(
     3000,
