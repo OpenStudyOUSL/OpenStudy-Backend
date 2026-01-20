@@ -1,9 +1,5 @@
 import Quiz from "../model/quizs.js";
 
-/**
- * @desc    Create a new quiz question
- * @route   POST /api/quizzes
- */
 export const createQuiz = async (req, res) => {
   try {
     const {
@@ -38,10 +34,7 @@ export const createQuiz = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get all quizzes
- * @route   GET /api/quizzes
- */
+
 export const getAllQuizzes = async (req, res) => {
   try {
     const quizzes = await Quiz.find().populate(
@@ -54,10 +47,7 @@ export const getAllQuizzes = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get quizzes by course
- * @route   GET /api/quizzes/course/:courseId
- */
+
 export const getQuizzesByCourse = async (req, res) => {
   try {
     const quizzes = await Quiz.find({ courseId: req.params.courseId });
@@ -67,10 +57,7 @@ export const getQuizzesByCourse = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get quizzes by course & topic
- * @route   GET /api/quizzes/course/:courseId/topic/:topic
- */
+
 export const getQuizzesByTopic = async (req, res) => {
   try {
     const quizzes = await Quiz.find({
@@ -83,10 +70,7 @@ export const getQuizzesByTopic = async (req, res) => {
   }
 };
 
-/**
- * @desc    Update quiz question
- * @route   PUT /api/quizzes/:id
- */
+
 export const updateQuiz = async (req, res) => {
   try {
     const updatedQuiz = await Quiz.findByIdAndUpdate(
@@ -105,10 +89,7 @@ export const updateQuiz = async (req, res) => {
   }
 };
 
-/**
- * @desc    Delete quiz
- * @route   DELETE /api/quizzes/:id
- */
+
 export const deleteQuiz = async (req, res) => {
   try {
     const deletedQuiz = await Quiz.findByIdAndDelete(req.params.id);
@@ -122,3 +103,23 @@ export const deleteQuiz = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+export async function getQuizCount(req, res) {
+  try {
+    const count = await Quiz.countDocuments({});
+    res.json({ count });
+  } catch (e) {
+    res.status(500).json({ message: "Error fetching quiz count" });
+  }
+}
+
+export async function getQuizCountByCourse(req, res) {
+  try {
+    const courseId = req.params.courseId;
+    const count = await Quiz.countDocuments({ courseId });
+    res.json({ count });
+  } catch (e) {
+    res.status(500).json({ message: "Error fetching quiz count for course" });
+  }
+}

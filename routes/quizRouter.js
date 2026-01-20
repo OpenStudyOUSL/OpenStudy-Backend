@@ -6,6 +6,8 @@ import {
   getQuizzesByTopic,
   updateQuiz,
   deleteQuiz,
+  getQuizCount,
+  getQuizCountByCourse,
 } from "../controllers/quizController.js";
 
 const quizRouter = express.Router();
@@ -17,6 +19,8 @@ quizRouter.post("/", createQuiz);
 quizRouter.get("/", getAllQuizzes);
 quizRouter.get("/course/:courseId", getQuizzesByCourse);
 quizRouter.get("/course/:courseId/topic/:topic", getQuizzesByTopic);
+quizRouter.get("/count", getQuizCount);
+quizRouter.get("/count/:courseId", getQuizCountByCourse);
 
 // Update quiz
 quizRouter.put("/:id", updateQuiz);
