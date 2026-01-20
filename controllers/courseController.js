@@ -1,10 +1,6 @@
 import Course from "../model/course.js";
 
-/**
- * @desc    Create new course
- * @route   POST /api/courses
- * @access  Public
- */
+
 export const createCourse = async (req, res) => {
   try {
     const {
@@ -36,11 +32,7 @@ export const createCourse = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get all courses
- * @route   GET /api/courses
- * @access  Public
- */
+
 export const getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find();
@@ -50,11 +42,6 @@ export const getAllCourses = async (req, res) => {
   }
 };
 
-/**
- * @desc    Get single course by ID
- * @route   GET /api/courses/:id
- * @access  Public
- */
 export const getCourseById = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
@@ -69,11 +56,7 @@ export const getCourseById = async (req, res) => {
   }
 };
 
-/**
- * @desc    Update course
- * @route   PUT /api/courses/:id
- * @access  Public
- */
+
 export const updateCourse = async (req, res) => {
   try {
     const updatedCourse = await Course.findByIdAndUpdate(
@@ -92,11 +75,7 @@ export const updateCourse = async (req, res) => {
   }
 };
 
-/**
- * @desc    Delete course
- * @route   DELETE /api/courses/:id
- * @access  Public
- */
+
 export const deleteCourse = async (req, res) => {
   try {
     const deletedCourse = await Course.findByIdAndDelete(req.params.id);
