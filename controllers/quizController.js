@@ -5,6 +5,7 @@ export const createQuiz = async (req, res) => {
     const {
       courseId,
       topic,
+      quizId,
       question,
       options,
       correctAnswer,
@@ -21,6 +22,7 @@ export const createQuiz = async (req, res) => {
     const quiz = new Quiz({
       courseId,
       topic,
+      quizId,
       question,
       options,
       correctAnswer,
