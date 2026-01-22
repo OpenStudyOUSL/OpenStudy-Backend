@@ -2,12 +2,12 @@ import express from "express";
 import {
   createQuiz,
   getAllQuizzes,
-  getQuizzesByCourse,
   getQuizzesByTopic,
   updateQuiz,
   deleteQuiz,
   getQuizCount,
-  getQuizCountByCourse,
+  getQuizzesCountByTopic,
+  getQuizzesCountAndTopicsByCourse,
 } from "../controllers/quizController.js";
 
 const quizRouter = express.Router();
@@ -17,10 +17,10 @@ quizRouter.post("/", createQuiz);
 
 // Read quizzes
 quizRouter.get("/", getAllQuizzes);
-quizRouter.get("/course/:courseId", getQuizzesByCourse);
 quizRouter.get("/course/:courseId/topic/:topic", getQuizzesByTopic);
 quizRouter.get("/count", getQuizCount);
-quizRouter.get("/count/:courseId", getQuizCountByCourse);
+quizRouter.get("/:courseId/:topic/count", getQuizzesCountByTopic);
+quizRouter.get("/:courseId", getQuizzesCountAndTopicsByCourse);
 
 // Update quiz
 quizRouter.put("/:id", updateQuiz);
