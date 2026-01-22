@@ -50,15 +50,29 @@ export const getAllQuizzes = async (req, res) => {
 };
 
 
-export const getQuizzesByCourse = async (req, res) => {
+export const getQuizzesCountAndTopicsByCourse = async (req, res) => {
   try {
-    const quizzes = await Quiz.find({ courseId: req.params.courseId });
-    res.status(200).json(quizzes);
+    const courseId = req.params.courseId;
+    const topics = await Quiz.distinct("topic", { courseId });
+
+    const counts = {};
+    for (const topic of topics) {
+      counts[topic] = await Quiz.countDocuments({ courseId, topic });
+    }
+    res.status(200).json({ topics, counts });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
+export const getQuizzesCountByTopic = async (req, res) => {
+  try {
+    const count = await Quiz.countDocuments({ topic: req.params.topic });
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export const getQuizzesByTopic = async (req, res) => {
   try {
@@ -113,15 +127,5 @@ export async function getQuizCount(req, res) {
     res.json({ count });
   } catch (e) {
     res.status(500).json({ message: "Error fetching quiz count" });
-  }
-}
-
-export async function getQuizCountByCourse(req, res) {
-  try {
-    const courseId = req.params.courseId;
-    const count = await Quiz.countDocuments({ courseId });
-    res.json({ count });
-  } catch (e) {
-    res.status(500).json({ message: "Error fetching quiz count for course" });
   }
 }
