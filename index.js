@@ -9,6 +9,7 @@ import userRouter from './routes/userRouter.js';
 import courseRouter from './routes/courseRouter.js';
 import quizRouter from './routes/quizRouter.js';
 import contactRouter from "./routes/contactRouter.js"; // ✅ ADD
+import leaderboardRouter from "./routes/leaderboardRouter.js";
 
 dotenv.config()
 
@@ -34,11 +35,11 @@ app.use(
         const token = req.header("Authorization")?.replace("Bearer ", "")
 
         if(token != null ){
-            jwt.verify(token, process.env.SECRET_KEY, (error, decoded)=>{
-                if(!error){
-                    req.user = decoded
-                }
-            })
+            try {
+                req.user = jwt.verify(token, process.env.SECRET_KEY)
+            } catch(e) {
+                // invalid or expired token — req.user stays undefined
+            }
         }
         next()
     }
@@ -47,6 +48,7 @@ app.use(
 app.use("/api/users", userRouter)
 app.use("/api/courses", courseRouter)
 app.use("/api/quizzes", quizRouter)
+app.use("/api/leaderboard", leaderboardRouter)
 app.use("/api/contact", contactRouter) // ✅ ADD
 
 app.listen(

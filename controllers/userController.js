@@ -136,10 +136,10 @@ export function updateUserType(req, res){
     return;
   }
 
-  const userEmail = req.params.email;
+  const userEmail = decodeURIComponent(req.params.email);
   const newUser = req.body;
 
-  User.updateOne({email : userEmail}, newUser).then(
+  User.updateOne({email : userEmail}, { $set: newUser }).then(
     ()=>{
       res.json({
         message : "User Type updated."
