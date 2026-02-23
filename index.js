@@ -10,6 +10,7 @@ import courseRouter from './routes/courseRouter.js';
 import quizRouter from './routes/quizRouter.js';
 import contactRouter from "./routes/contactRouter.js"; // ✅ ADD
 import leaderboardRouter from "./routes/leaderboardRouter.js";
+import topicRouter from "./routes/topicRouter.js";
 
 dotenv.config()
 
@@ -50,6 +51,7 @@ app.use("/api/courses", courseRouter)
 app.use("/api/quizzes", quizRouter)
 app.use("/api/leaderboard", leaderboardRouter)
 app.use("/api/contact", contactRouter) // ✅ ADD
+app.use("/api/topics", topicRouter)
 
 app.listen(
     3000,
