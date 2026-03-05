@@ -1,4 +1,5 @@
 import Leaderboard from "../model/leaderbord.js";
+import User from "../model/user.js";
 
 // Fetch leaderboard, sorted by score descending
 export const getLeaderboard = async (req, res) => {
@@ -44,7 +45,10 @@ export const updateLeaderboard = async (req, res) => {
     }
 
     const userName = user.userName;
-    const profilePicture = user.profilePicture;
+    
+    // Always fetch fresh profile picture from User DB in case it changed
+    const freshUser = await User.findOne({ email: user.email });
+    const profilePicture = freshUser?.profilePicture;
 
     // Attempt to find the existing leaderboard entry
     let entry = await Leaderboard.findOne({ userName });
@@ -60,6 +64,11 @@ export const updateLeaderboard = async (req, res) => {
         wrongAnswers: 0,
         rank: 0 // Will be recalculated dynamically later
       });
+    } else {
+      // Update profile picture even if entry exists
+      if (profilePicture) {
+        entry.profilePicture = profilePicture;
+      }
     }
 
     // Update stats based on payload
@@ -70,6 +79,51 @@ export const updateLeaderboard = async (req, res) => {
 
     const savedEntry = await entry.save();
     res.status(200).json(savedEntry);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+// Fetch specific user's stats and their dynamic rank
+export const getUserStats = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized. Please login." });
+    }
+
+    const userName = user.userName;
+
+    // Get all entries sorted by score to calculate rank
+    const leaderboardEntries = await Leaderboard.find().sort({ totalScore: -1 });
+    
+    // Find the entry for the current user
+    const userIndex = leaderboardEntries.findIndex(entry => entry.userName === userName);
+    
+    if (userIndex === -1) {
+      // If no entry exists yet, return default zeroed stats
+      return res.status(200).json({
+        userName,
+        totalScore: 0,
+        quizzesTaken: 0,
+        correctAnswers: 0,
+        wrongAnswers: 0,
+        rank: leaderboardEntries.length + 1
+      });
+    }
+
+    const userEntry = leaderboardEntries[userIndex];
+    
+    res.status(200).json({
+      _id: userEntry._id,
+      userName: userEntry.userName,
+      profilePicture: userEntry.profilePicture,
+      totalScore: userEntry.totalScore,
+      quizzesTaken: userEntry.quizzesTaken,
+      correctAnswers: userEntry.correctAnswers,
+      wrongAnswers: userEntry.wrongAnswers,
+      rank: userIndex + 1
+    });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

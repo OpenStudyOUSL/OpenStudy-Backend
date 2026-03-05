@@ -8,7 +8,7 @@ userRouter.get("/customers", getAllUsers);
 userRouter.get("/count", getUserCount);
 userRouter.post("/signup", createUser);
 userRouter.post("/login", loginUser);
-userRouter.put("/:email", updateUserType);
 userRouter.put("/update", changeUserInfo);
+userRouter.put("/:email", updateUserType);
 
 export default userRouter;

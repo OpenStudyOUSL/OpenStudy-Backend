@@ -28,12 +28,16 @@ const quizSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    questionType: {
-      type: String,
-      enum: ["MCQ", "TRUE_FALSE"],
-      default: "MCQ",
+      questionType: {
+        type: String,
+        enum: ["MCQ", "TRUE_FALSE"],
+        default: "MCQ",
+      },
+      image: {
+        type: String,
+        default: "",
+      },
     },
-  },
   { timestamps: true }
 );
 
