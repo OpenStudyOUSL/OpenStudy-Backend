@@ -1,4 +1,5 @@
 import User from "../model/user.js";
+import Leaderboard from "../model/leaderbord.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -34,9 +35,15 @@ export function createUser(req, res) {
         message: "User created",
       });
     })
-    .catch(() => {
+    .catch((err) => {
+      let message = "User not created";
+      if (err.code === 11000) {
+        const field = Object.keys(err.keyPattern)[0];
+        message = `This ${field} is already registered.`;
+      }
       res.status(403).json({
-        message: "User not created",
+        message: message,
+        error: err
       });
     });
 }
@@ -119,7 +126,19 @@ export async function getUser(req, res) {
     });
     return;
   }
-  res.json(req.user);
+
+  try {
+    const user = await User.findOne({ email: req.user.email });
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    // Return user without password
+    const { password, ...userWithoutPassword } = user.toObject();
+    res.json(userWithoutPassword);
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 export function getAllUsers(req, res) {
@@ -165,7 +184,30 @@ export function changeUserInfo(req, res) {
   const newUser = req.body;
 
   User.updateOne({ email: userEmail }, newUser)
-    .then(() => {
+    .then(async () => {
+      // Sync with leaderboard if userName or profilePicture changed
+      if (newUser.userName || newUser.profilePicture) {
+        try {
+          // We find by email if we had email in leaderboard, 
+          // but currently leaderboard uses userName. 
+          // This is a risk if userName changes. 
+          // For now, we update by the OLD userName if we have it, 
+          // or we'd need to have email in Leaderboard model.
+          
+          await Leaderboard.updateMany(
+            { userName: req.user.userName }, // Use the name from the token (pre-update)
+            { 
+              $set: { 
+                userName: newUser.userName || req.user.userName,
+                profilePicture: newUser.profilePicture !== undefined ? newUser.profilePicture : req.user.profilePicture
+              }
+            }
+          );
+        } catch (syncErr) {
+          console.error("Leaderboard sync error:", syncErr);
+        }
+      }
+
       res.json({
         message: "User details updated.",
       });
