@@ -229,5 +229,40 @@ export async function getUserCount(req, res) {
 }
 
 
+
+export async function deleteUser(req, res) {
+  if (!isAdmin(req)) {
+    res.status(403).json({
+      message: "Please login as admin to delete users",
+    });
+    return;
+  }
+
+  try {
+    const userEmail = decodeURIComponent(req.params.email);
+    
+    // Find user first to get their username for leaderboard cleanup
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    // Delete from users collection
+    await User.deleteOne({ email: userEmail });
+
+    // Cleanup leaderboard entry
+    try {
+      await Leaderboard.deleteOne({ userName: user.userName });
+    } catch (syncErr) {
+      console.error("Leaderboard cleanup error:", syncErr);
+    }
+
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error", error: err });
+  }
+}
+
 // admin account email: dilshan.jayasinghe@gmail.com   password: Dilshan#2025
 // student account email: isuru.fernando@gmail.com   password: Isuru@123
