@@ -264,5 +264,5 @@ export async function deleteUser(req, res) {
   }
 }
 
-// admin account email: dilshan.jayasinghe@gmail.com   password: Dilshan#2025
-// student account email: isuru.fernando@gmail.com   password: Isuru@123
+// admin account email: saman@gmail.com   password: samanopen
+// student account email: piyal@gmail.com   password: piyalopen
