@@ -10,7 +10,7 @@ import courseRouter from './routes/courseRouter.js';
 import quizRouter from './routes/quizRouter.js';
 import contactRouter from "./routes/contactRouter.js"; // ✅ ADD
 import leaderboardRouter from "./routes/leaderboardRouter.js";
-import topicRouter from "./routes/topicRouter.js";
+import topicRouter from "./routes/helpRouter.js";
 
 dotenv.config()
 

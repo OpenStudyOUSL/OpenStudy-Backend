@@ -1,4 +1,4 @@
-import Topic from "../model/Topic.js";
+import Topic from "../model/Help.js";
 
 export const getTopics = async (req, res) => {
   try {
