@@ -4,7 +4,7 @@ import {
   createTopic,
   deleteTopic,
   addReply,
-} from "../controllers/topicController.js";
+} from "../controllers/helpController.js";
 
 const topicRouter = express.Router();
 

@@ -33,5 +33,5 @@ const topicSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Topic = mongoose.model("Topic", topicSchema);
+const Topic = mongoose.model("Help", topicSchema);
 export default Topic;
