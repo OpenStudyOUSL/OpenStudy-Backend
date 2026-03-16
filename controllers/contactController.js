@@ -21,10 +21,10 @@ export const sendContactEmail = async (req, res) => {
 
     await transporter.sendMail({
       from: `"OpenStudy Contact" <${process.env.SMTP_USER}>`,
-      replyTo: fromEmail,          // ✅ sender email from form
-      to: process.env.TO_EMAIL,    // ✅ your receiving email
-      subject: subject,            // ✅ subject from form
-      text: `From: ${fromEmail}\n\n${message}`, // ✅ description from form
+      replyTo: fromEmail,          //  sender email from form
+      to: process.env.TO_EMAIL,    //  your receiving email
+      subject: subject,            //  subject from form
+      text: `From: ${fromEmail}\n\n${message}`, //  description from form
     });
 
     return res.json({ success: true, message: "Email sent!" });
